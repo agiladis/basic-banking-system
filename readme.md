@@ -1,4 +1,4 @@
-![flowchart-basic-banking-system](https://github.com/agiladis/basic-banking-system/assets/66274213/6130c3fd-b81b-4e82-992e-cc0c941c8c5c)# Basic Banking System
+# Basic Banking System
 
 this project is created to fulfill Binar Javascript Challenge
 
