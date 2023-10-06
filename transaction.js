@@ -8,6 +8,7 @@ class Transaction extends BankAccount {
   }
 
   postBalance() {
+    // this.balance is not refer to BankAccount property, yethowever it's refer to getter method balance()
     return this.balance;
   }
 }

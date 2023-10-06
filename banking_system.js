@@ -14,6 +14,10 @@ class BankAccount {
     this.#balance = 0;
   }
 
+  get balance() {
+    return this.#balance;
+  }
+
   deposit() {
     let amount = prompt('Masukan jumlah saldo yang akan ditambahkan');
 
@@ -37,7 +41,7 @@ class BankAccount {
       return;
     }
 
-    this.balance += amount;
+    this.#balance += amount;
   }
 
   withdraw() {
@@ -64,12 +68,12 @@ class BankAccount {
     }
 
     // check is it amount less than balance
-    if (!isAmountLessThanBalance(amount, this.balance)) {
+    if (!isAmountLessThanBalance(amount, this.#balance)) {
       alert('Saldo anda tidak cukup');
       return;
     }
 
-    this.balance -= amount;
+    this.#balance -= amount;
   }
 }
 
