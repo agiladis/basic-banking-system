@@ -8,12 +8,14 @@ class Transaction extends BankAccount {
   }
 
   postBalance() {
+    // this.balance is not refer to BankAccount property, yethowever it's refer to getter method balance()
     return this.balance;
   }
 }
 
 const ATMTransaction = new Transaction();
 const tambahSaldoButton = document.getElementById('tambahSaldo');
+const kurangiSaldoButton = document.getElementById('kurangiSaldo');
 
 tambahSaldoButton.addEventListener('click', async () => {
   ATMTransaction.deposit();
@@ -21,10 +23,11 @@ tambahSaldoButton.addEventListener('click', async () => {
   tampilkanSaldo(ATMTransaction.postBalance());
 });
 
-// kurangiSaldoButton.addEventListener('click', () => {
-//   bankAccount.kurangiSaldo();
-//   tampilkanSaldo(bankAccount.cekSaldo());
-// });
+kurangiSaldoButton.addEventListener('click', async () => {
+  ATMTransaction.withdraw();
+  await transferProcess();
+  tampilkanSaldo(ATMTransaction.postBalance());
+});
 
 const transferProcess = () => {
   return new Promise((resolve) => {
