@@ -14,6 +14,7 @@ class Transaction extends BankAccount {
 
 const ATMTransaction = new Transaction();
 const tambahSaldoButton = document.getElementById('tambahSaldo');
+const kurangiSaldoButton = document.getElementById('kurangiSaldo');
 
 tambahSaldoButton.addEventListener('click', async () => {
   ATMTransaction.deposit();
@@ -21,10 +22,11 @@ tambahSaldoButton.addEventListener('click', async () => {
   tampilkanSaldo(ATMTransaction.postBalance());
 });
 
-// kurangiSaldoButton.addEventListener('click', () => {
-//   bankAccount.kurangiSaldo();
-//   tampilkanSaldo(bankAccount.cekSaldo());
-// });
+kurangiSaldoButton.addEventListener('click', async () => {
+  ATMTransaction.withdraw();
+  await transferProcess();
+  tampilkanSaldo(ATMTransaction.postBalance());
+});
 
 const transferProcess = () => {
   return new Promise((resolve) => {

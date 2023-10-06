@@ -24,6 +24,14 @@ const isPositive = (input) => {
 
   return false;
 };
-// is input larger than balance
 
-export { isEmpty, isNumber, isPositive };
+// is input larger than balance
+const isAmountLessThanBalance = (input, balance) => {
+  if (input <= balance) {
+    return true;
+  }
+
+  return false;
+};
+
+export { isEmpty, isNumber, isPositive, isAmountLessThanBalance };
