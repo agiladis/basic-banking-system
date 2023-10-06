@@ -15,8 +15,9 @@ class Transaction extends BankAccount {
 const ATMTransaction = new Transaction();
 const tambahSaldoButton = document.getElementById('tambahSaldo');
 
-tambahSaldoButton.addEventListener('click', () => {
+tambahSaldoButton.addEventListener('click', async () => {
   ATMTransaction.deposit();
+  await transferProcess();
   tampilkanSaldo(ATMTransaction.postBalance());
 });
 
@@ -24,6 +25,15 @@ tambahSaldoButton.addEventListener('click', () => {
 //   bankAccount.kurangiSaldo();
 //   tampilkanSaldo(bankAccount.cekSaldo());
 // });
+
+const transferProcess = () => {
+  return new Promise((resolve) => {
+    console.log('Proses transaksi sedang berlangsung');
+
+    // simulate network delay
+    setTimeout(resolve, 1000);
+  });
+};
 
 const tampilkanSaldo = (saldo) => {
   alert(`saldo kamu saat ini : ${saldo}`);
