@@ -16,7 +16,7 @@ model User {
   name        String
   email       String        @unique
   password    String
-  Profile     Profile?
+  profile     Profile?
   bankAccount BankAccount[]
 }
 
