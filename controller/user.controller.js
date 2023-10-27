@@ -65,4 +65,46 @@ async function GetById(req, res) {
   }
 }
 
-module.exports = { Insert, GetAll, GetById };
+async function Update(req, res) {
+  const { name, email, password } = req.body;
+  const { id } = req.params;
+  // const payload = {};
+
+  // if (!name && !email && !password) {
+  //   let resp = ResponseTemplate(null, 'bad request', null, 400);
+  //   res.json(resp);
+  //   return;
+  // }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!user) {
+      let resp = ResponseTemplate(null, "id doesn't exist", null, 404);
+      res.json(resp);
+      return;
+    }
+
+    const userUpdate = await prisma.user.update({
+      where: { id: Number(id) },
+      data: {
+        name: name,
+        email: email,
+        password: password,
+      },
+    });
+
+    let resp = ResponseTemplate(userUpdate, 'success', null, 200);
+    res.json(resp);
+  } catch (error) {
+    let resp = ResponseTemplate(null, 'internal server error', error, 500);
+    res.json(resp);
+    return;
+  }
+}
+
+module.exports = { Insert, GetAll, GetById, Update };
