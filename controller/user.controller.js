@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const ResponseTemplate = require('../helper/response.helper');
+const { func } = require('joi');
 
 const prisma = new PrismaClient();
 
@@ -27,4 +28,9 @@ async function Insert(req, res) {
   }
 }
 
-module.exports = { Insert };
+async function Get(req, res) {
+  let resp = ResponseTemplate(null, 'success', null, 200);
+  res.json(resp);
+}
+
+module.exports = { Insert, Get };

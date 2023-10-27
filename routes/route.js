@@ -5,6 +5,6 @@ const userRouter = require('./user.route');
 
 // HTTP request logger middleware
 router.use(morgan('dev'));
-router.use('/user', userRouter);
+router.use('/users', userRouter);
 
 module.exports = router;

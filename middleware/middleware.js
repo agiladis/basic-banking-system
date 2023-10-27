@@ -3,9 +3,9 @@ const Joi = require('joi');
 
 function CheckPostReq(req, res, next) {
   const schema = Joi.object({
-    name: Joi.string().alphanum().max(50).required(),
-    email: Joi.string().alphanum().email().required(),
-    password: Joi.string().alphanum().required(),
+    name: Joi.string().max(50).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
   });
 
   const { error } = schema.validate(req.body);
@@ -24,4 +24,4 @@ function CheckPostReq(req, res, next) {
   next();
 }
 
-module.exports = CheckPostReq;
+module.exports = { CheckPostReq };
