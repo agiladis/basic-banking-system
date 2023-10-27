@@ -1,6 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
 const ResponseTemplate = require('../helper/response.helper');
-const { func } = require('joi');
 
 const prisma = new PrismaClient();
 
@@ -28,9 +27,17 @@ async function Insert(req, res) {
   }
 }
 
-async function Get(req, res) {
-  let resp = ResponseTemplate(null, 'success', null, 200);
-  res.json(resp);
+async function GetAll(req, res) {
+  try {
+    const users = await prisma.user.findMany();
+
+    let resp = ResponseTemplate(users, 'success', null, 200);
+    res.json(resp);
+  } catch (error) {
+    let resp = ResponseTemplate(null, 'internal server error', error, 500);
+    res.json(resp);
+    return;
+  }
 }
 
-module.exports = { Insert, Get };
+module.exports = { Insert, GetAll };
