@@ -29,7 +29,13 @@ async function Insert(req, res) {
 
 async function GetAll(req, res) {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
 
     let resp = ResponseTemplate(users, 'success', null, 200);
     res.json(resp);
