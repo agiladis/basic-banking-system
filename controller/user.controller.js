@@ -46,4 +46,23 @@ async function GetAll(req, res) {
   }
 }
 
-module.exports = { Insert, GetAll };
+async function GetById(req, res) {
+  const { id } = req.params;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    let resp = ResponseTemplate(user, 'success', null, 200);
+    res.json(resp);
+  } catch (error) {
+    let resp = ResponseTemplate(null, 'internal server error', error, 500);
+    res.json(resp);
+    return;
+  }
+}
+
+module.exports = { Insert, GetAll, GetById };
