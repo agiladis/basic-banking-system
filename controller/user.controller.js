@@ -68,13 +68,6 @@ async function GetById(req, res) {
 async function Update(req, res) {
   const { name, email, password } = req.body;
   const { id } = req.params;
-  // const payload = {};
-
-  // if (!name && !email && !password) {
-  //   let resp = ResponseTemplate(null, 'bad request', null, 400);
-  //   res.json(resp);
-  //   return;
-  // }
 
   try {
     const user = await prisma.user.findUnique({
@@ -107,4 +100,24 @@ async function Update(req, res) {
   }
 }
 
-module.exports = { Insert, GetAll, GetById, Update };
+async function Delete(req, res) {
+  const { id } = req.params;
+
+  try {
+    const user = await prisma.user.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    let resp = ResponseTemplate(null, 'success', null, 200);
+    res.json(resp);
+    return;
+  } catch (error) {
+    let resp = ResponseTemplate(null, 'internal server error', error, 500);
+    res.json(resp);
+    return;
+  }
+}
+
+module.exports = { Insert, GetAll, GetById, Update, Delete };
