@@ -42,10 +42,10 @@ model BankAccount {
 
 model Transaction {
   amount               BigInt
-  sourceAccount        BankAccount @relation("sourceAccount", fields: [sourceAccountId], references: [bankAccountNumber])
-  sourceAccountId      BigInt
-  destinationAccount   BankAccount @relation("destinationAccount", fields: [destinationAccountId], references: [bankAccountNumber])
-  destinationAccountId BigInt
+  sourceAccount        BankAccount @relation("sourceAccount", fields: [sourceAccountId], references: [id])
+  sourceAccountId      Int
+  destinationAccount   BankAccount @relation("destinationAccount", fields: [destinationAccountId], references: [id])
+  destinationAccountId Int
 
   @@id([sourceAccountId, destinationAccountId])
 }
