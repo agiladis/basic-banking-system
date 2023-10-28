@@ -9,7 +9,7 @@ const {
 } = require('../controller/user.controller');
 const { CheckPostReq } = require('../middleware/middleware');
 
-userRouter.post('/', CheckPostReq, Insert);
+userRouter.post('/', Insert);
 userRouter.get('/', GetAll);
 userRouter.get('/:id', GetById);
 userRouter.put('/:id', Update);

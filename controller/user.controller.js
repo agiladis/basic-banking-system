@@ -4,26 +4,36 @@ const ResponseTemplate = require('../helper/response.helper');
 const prisma = new PrismaClient();
 
 async function Insert(req, res) {
-  const { name, email, password } = req.body;
-
-  const payload = {
-    name,
-    email,
-    password,
-  };
+  const { name, email, password, identityType, identityNumber, address } =
+    req.body;
 
   try {
-    const user = await prisma.user.create({
-      data: payload,
+    const nUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password,
+        profile: {
+          create: {
+            identityType,
+            identityNumber,
+            address,
+          },
+        },
+      },
+      include: {
+        profile: true,
+      },
     });
 
-    let resp = ResponseTemplate(user, 'success', null, 201);
-    res.json(resp);
-    return;
+    // let resp = ResponseTemplate(newUser, 'success', null, 201);
+    return res.status(201).json({
+      data: nUser,
+    });
   } catch (error) {
-    let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    res.json(resp);
-    return;
+    console.log(error);
+    let resp = ResponseTemplate(null, 'cek internal server error', error, 500);
+    return res.status(500).json(resp);
   }
 }
 
