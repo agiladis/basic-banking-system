@@ -26,4 +26,24 @@ async function Insert(req, res) {
   }
 }
 
-module.exports = { Insert };
+async function GetAll(req, res) {
+  try {
+    const bankAccounts = await prisma.bankAccount.findMany({
+      select: {
+        id: true,
+        userId: true,
+        bankName: true,
+        bankAccountNumber: true,
+      },
+    });
+
+    let resp = ResponseTemplate(bankAccounts, 'success', null, 200);
+    res.status(200).json(resp);
+  } catch (error) {
+    let resp = ResponseTemplate(null, 'internal server error', error, 500);
+    res.status(500).json(resp);
+    return;
+  }
+}
+
+module.exports = { Insert, GetAll };
