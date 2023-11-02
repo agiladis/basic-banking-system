@@ -73,36 +73,57 @@ async function GetById(req, res) {
 }
 
 async function Update(req, res) {
-  const { name, email, password } = req.body;
-  const { id } = req.params;
+  const id = Number(req.params.id);
+  const { name, email, password, identityType, identityNumber, address } =
+    req.body;
 
   try {
-    const user = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: {
-        id: Number(id),
+        id: id,
       },
     });
 
-    if (!user) {
-      let resp = ResponseTemplate(null, "id doesn't exist", null, 404);
-      res.json(resp);
+    if (!existingUser) {
+      let resp = ResponseTemplate(null, "user doesn't exist", null, 404);
+      res.status(404).json(resp);
       return;
     }
 
-    const userUpdate = await prisma.user.update({
-      where: { id: Number(id) },
+    const updatedUser = await prisma.user.update({
+      where: { id: id },
       data: {
         name: name,
         email: email,
         password: password,
+        profile: {
+          update: {
+            identityType: identityType,
+            identityNumber: identityNumber,
+            address: address,
+            updatedAt: new Date(),
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        profile: {
+          select: {
+            identityType: true,
+            identityNumber: true,
+            address: true,
+          },
+        },
       },
     });
 
-    let resp = ResponseTemplate(userUpdate, 'success', null, 200);
-    res.json(resp);
+    let resp = ResponseTemplate(updatedUser, 'success', null, 200);
+    res.status(200).json(resp);
   } catch (error) {
     let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    res.json(resp);
+    res.status(500).json(resp);
     return;
   }
 }
