@@ -4,25 +4,34 @@ const ResponseTemplate = require('../helper/response.helper');
 const prisma = new PrismaClient();
 
 async function Insert(req, res) {
-  const { name, email, password } = req.body;
-
-  const payload = {
-    name,
-    email,
-    password,
-  };
+  const { name, email, password, identityType, identityNumber, address } =
+    req.body;
 
   try {
-    const user = await prisma.user.create({
-      data: payload,
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password,
+        profile: {
+          create: {
+            identityType,
+            identityNumber,
+            address,
+          },
+        },
+      },
+      include: {
+        profile: true,
+      },
     });
 
-    let resp = ResponseTemplate(user, 'success', null, 201);
-    res.json(resp);
-    return;
+    let resp = ResponseTemplate(newUser, 'success', null, 201);
+    res.status(201).json(resp);
   } catch (error) {
-    let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    res.json(resp);
+    console.log(error);
+    let resp = ResponseTemplate(null, 'cek internal server error', error, 500);
+    res.status(500).json(resp);
     return;
   }
 }
@@ -38,10 +47,10 @@ async function GetAll(req, res) {
     });
 
     let resp = ResponseTemplate(users, 'success', null, 200);
-    res.json(resp);
+    res.status(200).json(resp);
   } catch (error) {
     let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    res.json(resp);
+    res.status(500).json(resp);
     return;
   }
 }
@@ -51,73 +60,112 @@ async function GetById(req, res) {
 
   try {
     const user = await prisma.user.findUnique({
-      where: {
-        id: Number(id),
+      select: {
+        name: true,
+        email: true,
+        password: true,
+        profile: {
+          select: {
+            identityType: true,
+            identityNumber: true,
+            address: true,
+          },
+        },
       },
-    });
-
-    let resp = ResponseTemplate(user, 'success', null, 200);
-    res.json(resp);
-  } catch (error) {
-    let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    res.json(resp);
-    return;
-  }
-}
-
-async function Update(req, res) {
-  const { name, email, password } = req.body;
-  const { id } = req.params;
-
-  try {
-    const user = await prisma.user.findUnique({
       where: {
         id: Number(id),
       },
     });
 
     if (!user) {
-      let resp = ResponseTemplate(null, "id doesn't exist", null, 404);
-      res.json(resp);
+      let resp = ResponseTemplate(null, 'user not found', true, 404);
+      res.status(404).json(resp);
       return;
     }
 
-    const userUpdate = await prisma.user.update({
-      where: { id: Number(id) },
+    let resp = ResponseTemplate(user, 'success', null, 200);
+    res.status(200).json(resp);
+  } catch (error) {
+    let resp = ResponseTemplate(null, 'internal server error', error, 500);
+    res.status(500).json(resp);
+    return;
+  }
+}
+
+async function Update(req, res) {
+  const id = Number(req.params.id);
+  const { name, email, password, identityType, identityNumber, address } =
+    req.body;
+
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!existingUser) {
+      let resp = ResponseTemplate(null, "user doesn't exist", null, 404);
+      res.status(404).json(resp);
+      return;
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: id },
       data: {
         name: name,
         email: email,
         password: password,
+        profile: {
+          update: {
+            identityType: identityType,
+            identityNumber: identityNumber,
+            address: address,
+            updatedAt: new Date(),
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        profile: {
+          select: {
+            identityType: true,
+            identityNumber: true,
+            address: true,
+          },
+        },
       },
     });
 
-    let resp = ResponseTemplate(userUpdate, 'success', null, 200);
-    res.json(resp);
+    let resp = ResponseTemplate(updatedUser, 'success', null, 200);
+    res.status(200).json(resp);
   } catch (error) {
     let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    res.json(resp);
+    res.status(500).json(resp);
     return;
   }
 }
 
-async function Delete(req, res) {
-  const { id } = req.params;
+// async function Delete(req, res) {
+//   const { id } = req.params;
 
-  try {
-    const user = await prisma.user.delete({
-      where: {
-        id: Number(id),
-      },
-    });
+//   try {
+//     const user = await prisma.user.delete({
+//       where: {
+//         id: Number(id),
+//       },
+//     });
 
-    let resp = ResponseTemplate(null, 'success', null, 200);
-    res.json(resp);
-    return;
-  } catch (error) {
-    let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    res.json(resp);
-    return;
-  }
-}
+//     let resp = ResponseTemplate(null, 'success', null, 200);
+//     res.json(resp);
+//     return;
+//   } catch (error) {
+//     let resp = ResponseTemplate(null, 'internal server error', error, 500);
+//     res.json(resp);
+//     return;
+//   }
+// }
 
-module.exports = { Insert, GetAll, GetById, Update, Delete };
+module.exports = { Insert, GetAll, GetById, Update };
