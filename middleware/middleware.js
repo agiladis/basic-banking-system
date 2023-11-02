@@ -1,11 +1,14 @@
 const { ResponseTemplate } = require('../helper/response.helper');
 const Joi = require('joi');
 
-function CheckPostReq(req, res, next) {
+function ValidateCreateUserRequest(req, res, next) {
   const schema = Joi.object({
     name: Joi.string().max(50).required(),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
+    identityType: Joi.string().required(),
+    identityNumber: Joi.string().required(),
+    address: Joi.string().required(),
   });
 
   const { error } = schema.validate(req.body);
@@ -17,11 +20,10 @@ function CheckPostReq(req, res, next) {
       error.details[0].message,
       400
     );
-    res.json(respErr);
-    return;
+    return res.status(400).json(respErr);
   }
 
   next();
 }
 
-module.exports = { CheckPostReq };
+module.exports = { ValidateCreateUserRequest };

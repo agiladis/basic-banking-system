@@ -7,9 +7,9 @@ const {
   Update,
   Delete,
 } = require('../controller/user.controller');
-const { CheckPostReq } = require('../middleware/middleware');
+const { ValidateCreateUserRequest } = require('../middleware/middleware');
 
-userRouter.post('/', Insert);
+userRouter.post('/', ValidateCreateUserRequest, Insert);
 userRouter.get('/', GetAll);
 userRouter.get('/:id', GetById);
 userRouter.put('/:id', Update);

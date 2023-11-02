@@ -8,7 +8,7 @@ async function Insert(req, res) {
     req.body;
 
   try {
-    const nUser = await prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
         name,
         email,
@@ -26,10 +26,8 @@ async function Insert(req, res) {
       },
     });
 
-    // let resp = ResponseTemplate(newUser, 'success', null, 201);
-    return res.status(201).json({
-      data: nUser,
-    });
+    let resp = ResponseTemplate(newUser, 'success', null, 201);
+    return res.status(201).json(resp);
   } catch (error) {
     console.log(error);
     let resp = ResponseTemplate(null, 'cek internal server error', error, 500);
