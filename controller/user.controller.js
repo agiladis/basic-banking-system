@@ -60,16 +60,34 @@ async function GetById(req, res) {
 
   try {
     const user = await prisma.user.findUnique({
+      select: {
+        name: true,
+        email: true,
+        password: true,
+        profile: {
+          select: {
+            identityType: true,
+            identityNumber: true,
+            address: true,
+          },
+        },
+      },
       where: {
         id: Number(id),
       },
     });
 
+    if (!user) {
+      let resp = ResponseTemplate(null, 'user not found', true, 404);
+      res.status(404).json(resp);
+      return;
+    }
+
     let resp = ResponseTemplate(user, 'success', null, 200);
-    res.json(resp);
+    res.status(200).json(resp);
   } catch (error) {
     let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    res.json(resp);
+    res.status(500).json(resp);
     return;
   }
 }
