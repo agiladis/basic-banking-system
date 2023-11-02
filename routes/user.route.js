@@ -5,7 +5,6 @@ const {
   GetAll,
   GetById,
   Update,
-  Delete,
 } = require('../controller/user.controller');
 const {
   ValidateCreateUserRequest,
@@ -16,6 +15,6 @@ userRouter.post('/', ValidateCreateUserRequest, Insert);
 userRouter.get('/', GetAll);
 userRouter.get('/:id', GetById);
 userRouter.put('/:id', ValidateUpdateUserRequest, Update);
-userRouter.delete('/:id', Delete);
+// userRouter.delete('/:id', Delete);
 
 module.exports = userRouter;

@@ -148,24 +148,24 @@ async function Update(req, res) {
   }
 }
 
-async function Delete(req, res) {
-  const { id } = req.params;
+// async function Delete(req, res) {
+//   const { id } = req.params;
 
-  try {
-    const user = await prisma.user.delete({
-      where: {
-        id: Number(id),
-      },
-    });
+//   try {
+//     const user = await prisma.user.delete({
+//       where: {
+//         id: Number(id),
+//       },
+//     });
 
-    let resp = ResponseTemplate(null, 'success', null, 200);
-    res.json(resp);
-    return;
-  } catch (error) {
-    let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    res.json(resp);
-    return;
-  }
-}
+//     let resp = ResponseTemplate(null, 'success', null, 200);
+//     res.json(resp);
+//     return;
+//   } catch (error) {
+//     let resp = ResponseTemplate(null, 'internal server error', error, 500);
+//     res.json(resp);
+//     return;
+//   }
+// }
 
-module.exports = { Insert, GetAll, GetById, Update, Delete };
+module.exports = { Insert, GetAll, GetById, Update };
