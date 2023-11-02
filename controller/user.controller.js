@@ -27,11 +27,12 @@ async function Insert(req, res) {
     });
 
     let resp = ResponseTemplate(newUser, 'success', null, 201);
-    return res.status(201).json(resp);
+    res.status(201).json(resp);
   } catch (error) {
     console.log(error);
     let resp = ResponseTemplate(null, 'cek internal server error', error, 500);
-    return res.status(500).json(resp);
+    res.status(500).json(resp);
+    return;
   }
 }
 
@@ -46,10 +47,11 @@ async function GetAll(req, res) {
     });
 
     let resp = ResponseTemplate(users, 'success', null, 200);
-    return res.status(200).json(resp);
+    res.status(200).json(resp);
   } catch (error) {
     let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    return res.status(500).json(resp);
+    res.status(500).json(resp);
+    return;
   }
 }
 
