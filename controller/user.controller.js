@@ -46,11 +46,10 @@ async function GetAll(req, res) {
     });
 
     let resp = ResponseTemplate(users, 'success', null, 200);
-    res.json(resp);
+    return res.status(200).json(resp);
   } catch (error) {
     let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    res.json(resp);
-    return;
+    return res.status(500).json(resp);
   }
 }
 
