@@ -16,7 +16,7 @@ function ValidateCreateUserRequest(req, res, next) {
   if (error) {
     let respErr = ResponseTemplate(
       null,
-      'invalid request',
+      'invalid request body',
       error.details[0].message,
       400
     );
@@ -26,4 +26,29 @@ function ValidateCreateUserRequest(req, res, next) {
   next();
 }
 
-module.exports = { ValidateCreateUserRequest };
+function ValidateUpdateUserRequest(req, res, next) {
+  const schema = Joi.object({
+    name: Joi.string().max(50),
+    email: Joi.string().email(),
+    password: Joi.string(),
+    identityType: Joi.string(),
+    identityNumber: Joi.string(),
+    address: Joi.string(),
+  });
+
+  const { error } = schema.validate(req.body);
+
+  if (error) {
+    let respErr = ResponseTemplate(
+      null,
+      'invalid request body',
+      error.details[0].message,
+      400
+    );
+    return res.status(400).json(respErr);
+  }
+
+  next();
+}
+
+module.exports = { ValidateCreateUserRequest, ValidateUpdateUserRequest };
