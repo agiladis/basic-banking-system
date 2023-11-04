@@ -46,4 +46,34 @@ async function GetAll(req, res) {
   }
 }
 
-module.exports = { Insert, GetAll };
+async function GetById(req, res) {
+  const { id } = req.params;
+
+  try {
+    const bankAccount = await prisma.bankAccount.findUnique({
+      select: {
+        userId: true,
+        bankName: true,
+        balance: true,
+      },
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!bankAccount) {
+      let resp = ResponseTemplate(null, 'bank account not found', true, 404);
+      res.status(404).json(resp);
+      return;
+    }
+
+    let resp = ResponseTemplate(bankAccount, 'success', null, 200);
+    res.status(200).json(resp);
+  } catch (error) {
+    let resp = ResponseTemplate(null, 'internal server error', error, 500);
+    res.status(500).json(resp);
+    return;
+  }
+}
+
+module.exports = { Insert, GetAll, GetById };
