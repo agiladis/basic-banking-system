@@ -5,14 +5,16 @@ const {
   GetAll,
   GetById,
   Update,
-  Delete,
 } = require('../controller/user.controller');
-const { CheckPostReq } = require('../middleware/middleware');
+const {
+  ValidateCreateUserRequest,
+  ValidateUpdateUserRequest,
+} = require('../middleware/middleware');
 
-userRouter.post('/', CheckPostReq, Insert);
+userRouter.post('/', ValidateCreateUserRequest, Insert);
 userRouter.get('/', GetAll);
 userRouter.get('/:id', GetById);
-userRouter.put('/:id', Update);
-userRouter.delete('/:id', Delete);
+userRouter.put('/:id', ValidateUpdateUserRequest, Update);
+// userRouter.delete('/:id', Delete);
 
 module.exports = userRouter;
