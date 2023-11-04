@@ -50,12 +50,11 @@ model BankAccount {
 }
 
 model Transaction {
+  id                   Int         @id @default(autoincrement())
   amount               Int
   sourceAccount        BankAccount @relation("sourceAccount", fields: [sourceAccountId], references: [id])
   sourceAccountId      Int
   destinationAccount   BankAccount @relation("destinationAccount", fields: [destinationAccountId], references: [id])
   destinationAccountId Int
   createdAt            DateTime    @default(now())
-
-  @@id([sourceAccountId, destinationAccountId])
 }
