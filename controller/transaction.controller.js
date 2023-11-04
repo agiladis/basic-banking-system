@@ -87,6 +87,7 @@ async function Insert(req, res) {
 
     // create respons payload
     const transactionData = {
+      id: transaction[2].id,
       amount: amount,
       sourceBankAccountNumber: transaction[0].bankAccountNumber,
       destinationBankAccountNumber: transaction[1].bankAccountNumber,
@@ -120,4 +121,57 @@ async function GetAll(req, res) {
   }
 }
 
-module.exports = { Insert, GetAll };
+async function GetById(req, res) {
+  const { id } = req.params;
+
+  try {
+    const transaction = await prisma.transaction.findUnique({
+      select: {
+        id: true,
+        amount: true,
+        createdAt: true,
+        sourceAccount: {
+          select: {
+            bankName: true,
+            bankAccountNumber: true,
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        destinationAccount: {
+          select: {
+            bankName: true,
+            bankAccountNumber: true,
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!transaction) {
+      return res
+        .status(404)
+        .json(ResponseTemplate(null, 'transaction not found', null, 404));
+    }
+
+    return res
+      .status(200)
+      .json(ResponseTemplate(transaction, 'success', null, 200));
+  } catch (error) {
+    return res
+      .status(500)
+      .json(ResponseTemplate(null, 'internal server error', error, 500));
+  }
+}
+
+module.exports = { Insert, GetAll, GetById };
