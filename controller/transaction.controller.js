@@ -62,7 +62,7 @@ async function Insert(req, res) {
     }
 
     // do transaction
-    await prisma.$transaction([
+    const transaction = await prisma.$transaction([
       // decrease the balance from source bank account
       prisma.bankAccount.update({
         where: { id: sourceAccountId },
@@ -85,10 +85,21 @@ async function Insert(req, res) {
       }),
     ]);
 
+    // create respons payload
+    const transactionData = {
+      id: transaction[2].id,
+      amount: amount,
+      sourceBankAccountNumber: transaction[0].bankAccountNumber,
+      destinationBankAccountNumber: transaction[1].bankAccountNumber,
+      createdAt: transaction[2].createdAt,
+    };
+
     // give response if transaction completed
     return res
       .status(201)
-      .json(ResponseTemplate(null, 'transaction success', null, 201));
+      .json(
+        ResponseTemplate(transactionData, 'transaction success', null, 201)
+      );
   } catch (error) {
     return res
       .status(500)
@@ -96,4 +107,71 @@ async function Insert(req, res) {
   }
 }
 
-module.exports = Insert;
+async function GetAll(req, res) {
+  try {
+    const transactions = await prisma.transaction.findMany();
+
+    return res
+      .status(200)
+      .json(ResponseTemplate(transactions, 'success', null, 200));
+  } catch (error) {
+    return res
+      .status(500)
+      .json(ResponseTemplate(null, 'internal server error', error, 500));
+  }
+}
+
+async function GetById(req, res) {
+  const { id } = req.params;
+
+  try {
+    const transaction = await prisma.transaction.findUnique({
+      select: {
+        id: true,
+        amount: true,
+        createdAt: true,
+        sourceAccount: {
+          select: {
+            bankName: true,
+            bankAccountNumber: true,
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        destinationAccount: {
+          select: {
+            bankName: true,
+            bankAccountNumber: true,
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!transaction) {
+      return res
+        .status(404)
+        .json(ResponseTemplate(null, 'transaction not found', null, 404));
+    }
+
+    return res
+      .status(200)
+      .json(ResponseTemplate(transaction, 'success', null, 200));
+  } catch (error) {
+    return res
+      .status(500)
+      .json(ResponseTemplate(null, 'internal server error', error, 500));
+  }
+}
+
+module.exports = { Insert, GetAll, GetById };
