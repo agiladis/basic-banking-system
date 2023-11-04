@@ -17,12 +17,13 @@ async function Insert(req, res) {
       },
     });
 
-    let resp = ResponseTemplate(newBankAccount, 'success', null, 201);
-    res.status(201).json(resp);
+    return res
+      .status(201)
+      .json(ResponseTemplate(newBankAccount, 'success', null, 201));
   } catch (error) {
-    let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    res.status(500).json(resp);
-    return;
+    return res
+      .status(500)
+      .json(ResponseTemplate(null, 'internal server error', error, 500));
   }
 }
 
@@ -37,12 +38,13 @@ async function GetAll(req, res) {
       },
     });
 
-    let resp = ResponseTemplate(bankAccounts, 'success', null, 200);
-    res.status(200).json(resp);
+    return res
+      .status(200)
+      .json(ResponseTemplate(bankAccounts, 'success', null, 200));
   } catch (error) {
-    let resp = ResponseTemplate(null, 'internal server error', error, 500);
-    res.status(500).json(resp);
-    return;
+    return res
+      .status(500)
+      .json(ResponseTemplate(null, 'internal server error', error, 500));
   }
 }
 
