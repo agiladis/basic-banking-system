@@ -62,7 +62,7 @@ async function Insert(req, res) {
     }
 
     // do transaction
-    await prisma.$transaction([
+    const transaction = await prisma.$transaction([
       // decrease the balance from source bank account
       prisma.bankAccount.update({
         where: { id: sourceAccountId },
@@ -85,10 +85,20 @@ async function Insert(req, res) {
       }),
     ]);
 
+    // create respons payload
+    const transactionData = {
+      amount: amount,
+      sourceBankAccountNumber: transaction[0].bankAccountNumber,
+      destinationBankAccountNumber: transaction[1].bankAccountNumber,
+      createdAt: transaction[2].createdAt,
+    };
+
     // give response if transaction completed
     return res
       .status(201)
-      .json(ResponseTemplate(null, 'transaction success', null, 201));
+      .json(
+        ResponseTemplate(transactionData, 'transaction success', null, 201)
+      );
   } catch (error) {
     return res
       .status(500)
