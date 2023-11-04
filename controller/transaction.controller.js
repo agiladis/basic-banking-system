@@ -106,4 +106,18 @@ async function Insert(req, res) {
   }
 }
 
-module.exports = Insert;
+async function GetAll(req, res) {
+  try {
+    const transactions = await prisma.transaction.findMany();
+
+    return res
+      .status(200)
+      .json(ResponseTemplate(transactions, 'success', null, 200));
+  } catch (error) {
+    return res
+      .status(500)
+      .json(ResponseTemplate(null, 'internal server error', error, 500));
+  }
+}
+
+module.exports = { Insert, GetAll };
