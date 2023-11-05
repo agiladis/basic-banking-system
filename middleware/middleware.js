@@ -58,10 +58,31 @@ function ValidateCreateBankAccountRequest(req, res, next) {
     balance: Joi.number().required(),
   });
 
-  const userid = Joi.number();
-  console.log(req.body);
-  console.log(req.body.userId);
-  console.log(userid.validate(req.body.userId));
+  const { error } = schema.validate(req.body);
+
+  if (error) {
+    return res
+      .status(400)
+      .json(
+        ResponseTemplate(
+          null,
+          'invalid request body',
+          error.details[0].message,
+          400
+        )
+      );
+  }
+
+  next();
+}
+
+function ValidateCreateTransactionRequest(req, res, next) {
+  const schema = Joi.object({
+    sourceAccountId: Joi.number().required(),
+    destinationAccountId: Joi.number().required(),
+    amount: Joi.number().required(),
+  });
+
   const { error } = schema.validate(req.body);
 
   if (error) {
@@ -84,4 +105,5 @@ module.exports = {
   ValidateCreateUserRequest,
   ValidateUpdateUserRequest,
   ValidateCreateBankAccountRequest,
+  ValidateCreateTransactionRequest,
 };
