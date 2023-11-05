@@ -5,8 +5,11 @@ const {
   GetAll,
   GetById,
 } = require('../controller/transaction.controller');
+const {
+  ValidateCreateTransactionRequest,
+} = require('../middleware/middleware');
 
-transactionRoute.post('/', Insert);
+transactionRoute.post('/', ValidateCreateTransactionRequest, Insert);
 transactionRoute.get('/', GetAll);
 transactionRoute.get('/:id', GetById);
 
