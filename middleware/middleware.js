@@ -58,10 +58,6 @@ function ValidateCreateBankAccountRequest(req, res, next) {
     balance: Joi.number().required(),
   });
 
-  const userid = Joi.number();
-  console.log(req.body);
-  console.log(req.body.userId);
-  console.log(userid.validate(req.body.userId));
   const { error } = schema.validate(req.body);
 
   if (error) {
