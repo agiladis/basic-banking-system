@@ -5,8 +5,11 @@ const {
   GetAll,
   GetById,
 } = require('../controller/bankAccount.controller');
+const {
+  ValidateCreateBankAccountRequest,
+} = require('../middleware/middleware');
 
-bankAccountRouter.post('/', Insert);
+bankAccountRouter.post('/', ValidateCreateBankAccountRequest, Insert);
 bankAccountRouter.get('/', GetAll);
 bankAccountRouter.get('/:id', GetById);
 
