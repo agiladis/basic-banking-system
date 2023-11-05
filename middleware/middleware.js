@@ -1,4 +1,4 @@
-const { ResponseTemplate } = require('../helper/response.helper');
+const ResponseTemplate = require('../helper/response.helper');
 const Joi = require('joi');
 
 function ValidateCreateUserRequest(req, res, next) {
@@ -51,4 +51,37 @@ function ValidateUpdateUserRequest(req, res, next) {
   next();
 }
 
-module.exports = { ValidateCreateUserRequest, ValidateUpdateUserRequest };
+function ValidateCreateBankAccountRequest(req, res, next) {
+  const schema = Joi.object({
+    userId: Joi.number().required(),
+    bankName: Joi.string().required(),
+    balance: Joi.number().required(),
+  });
+
+  const userid = Joi.number();
+  console.log(req.body);
+  console.log(req.body.userId);
+  console.log(userid.validate(req.body.userId));
+  const { error } = schema.validate(req.body);
+
+  if (error) {
+    return res
+      .status(400)
+      .json(
+        ResponseTemplate(
+          null,
+          'invalid request body',
+          error.details[0].message,
+          400
+        )
+      );
+  }
+
+  next();
+}
+
+module.exports = {
+  ValidateCreateUserRequest,
+  ValidateUpdateUserRequest,
+  ValidateCreateBankAccountRequest,
+};
