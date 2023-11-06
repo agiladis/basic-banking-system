@@ -38,6 +38,25 @@ const {
  *               example: 1699303624686
  *         - $ref: '#/components/schemas/BankRequest'
  *
+ *     Transaction:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           example: 1
+ *         amount:
+ *           type: integer
+ *           example: 2000
+ *         sourceAccountId:
+ *           type: integer
+ *           example: 5
+ *         destinationAccountId:
+ *           type: integer
+ *           example: 1
+ *         createdAt:
+ *           type: string
+ *           example: 2023-11-06T06:32:31.301Z
+ *
  *     LastActionResponse:
  *       type: object
  *       properties:
@@ -122,6 +141,61 @@ bankAccountRouter.post('/', ValidateCreateBankAccountRequest, Insert);
  *                    $ref: '#/components/schemas/BankResponse'
  */
 bankAccountRouter.get('/', GetAll);
+
+/**
+ * @openapi
+ * /accounts/{id}:
+ *  get:
+ *    summary: Get Bank Accounts by User ID
+ *    tags:
+ *      - Bank Accounts
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *          minimum: 1
+ *    responses:
+ *      200:
+ *        description: success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                status:
+ *                  type: integer
+ *                  example: 200
+ *                message:
+ *                  type: string
+ *                  example: success
+ *                error:
+ *                  type: object
+ *                  example: null
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    user:
+ *                      type: object
+ *                      properties:
+ *                        name:
+ *                    bankName:
+ *                      type: string
+ *                      example: GoPay
+ *                    balance:
+ *                      type: integer
+ *                      example: 100000
+ *                    sourceTransaction:
+ *                      type: array
+ *                      items:
+ *                        $ref: '#/components/schemas/Transaction'
+ *                    destinationAccountId:
+ *                      type: array
+ *                      items:
+ *                        $ref: '#/components/schemas/Transaction'
+ *
+ */
 bankAccountRouter.get('/:id', GetById);
 
 module.exports = bankAccountRouter;
