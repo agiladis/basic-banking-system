@@ -47,19 +47,6 @@ const {
  *           type: string
  *           example: JL. Sahaabat 04
  *
- *     ProfileReq:
- *       type: object
- *       properties:
- *         identityType:
- *           type: string
- *           example: KTP
- *         identityNumber:
- *           type: string
- *           example: 3265043
- *         address:
- *           type: string
- *           example: JL. Sahaabat 04
- *
  *     UserProfileResponse:
  *       allOf:
  *         - $ref: '#/components/schemas/UserResponse'
@@ -167,6 +154,13 @@ userRouter.get('/', GetAll);
  *    summary: Get User and its Profile by User ID
  *    tags:
  *      - Users
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *          minimum: 1
  *    responses:
  *      200:
  *        description: success
@@ -195,6 +189,56 @@ userRouter.get('/', GetAll);
  *                    - $ref: '#/components/schemas/LastActionResponse'
  */
 userRouter.get('/:id', GetById);
+
+/**
+ * @openapi
+ * /users/{id}:
+ *  put:
+ *    summary: Update User and its Profile by User ID
+ *    tags:
+ *      - Users
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *          minimum: 1
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            allOf:
+ *              - $ref: '#/components/schemas/UserRequest'
+ *              - $ref: '#/components/schemas/Profile'
+ *    responses:
+ *      200:
+ *        description: success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                status:
+ *                  type: integer
+ *                  example: 200
+ *                message:
+ *                  type: string
+ *                  example: success
+ *                error:
+ *                  type: object
+ *                  example: null
+ *                data:
+ *                  allOf:
+ *                    - type: object
+ *                      properties:
+ *                        id:
+ *                          type: integer
+ *                          example: 1
+ *                    - $ref: '#/components/schemas/UserProfileResponse'
+ *                    - $ref: '#/components/schemas/LastActionResponse'
+ */
 userRouter.put('/:id', ValidateUpdateUserRequest, Update);
 // userRouter.delete('/:id', Delete);
 
