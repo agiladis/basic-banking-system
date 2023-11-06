@@ -15,8 +15,28 @@ const {
  * @openapi
  * /users:
  *  post:
+ *    summary: Create new User and its Profile
  *    tags:
  *      - Users
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              name:
+ *                type: string
+ *              email:
+ *                type: string
+ *              password:
+ *                type: string
+ *              identityType:
+ *                type: string
+ *              identityNumber:
+ *                type: string
+ *              address:
+ *                type: string
  *    responses:
  *      201:
  *        description: created
