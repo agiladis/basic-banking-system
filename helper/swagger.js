@@ -11,12 +11,12 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
-        description: 'Development server',
+        url: 'http://localhost:3000/api/v1',
+        description: 'Development server V1',
       },
     ],
   },
-  apis: ['./routes/route.js'],
+  apis: ['./routes/user.route.js'],
 };
 
 // Docs in JSON format
