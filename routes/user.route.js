@@ -160,6 +160,40 @@ userRouter.post('/', ValidateCreateUserRequest, Insert);
  */
 userRouter.get('/', GetAll);
 
+/**
+ * @openapi
+ * /users/{id}:
+ *  get:
+ *    summary: Get User and its Profile by User ID
+ *    tags:
+ *      - Users
+ *    responses:
+ *      200:
+ *        description: success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                status:
+ *                  type: integer
+ *                  example: 200
+ *                message:
+ *                  type: string
+ *                  example: success
+ *                error:
+ *                  type: object
+ *                  example: null
+ *                data:
+ *                  allOf:
+ *                    - type: object
+ *                      properties:
+ *                        id:
+ *                          type: integer
+ *                          example: 1
+ *                    - $ref: '#/components/schemas/UserProfileResponse'
+ *                    - $ref: '#/components/schemas/LastActionResponse'
+ */
 userRouter.get('/:id', GetById);
 userRouter.put('/:id', ValidateUpdateUserRequest, Update);
 // userRouter.delete('/:id', Delete);
