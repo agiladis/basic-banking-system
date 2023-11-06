@@ -37,7 +37,6 @@ const {
  *               type: string
  *               example: 1699303624686
  *         - $ref: '#/components/schemas/BankRequest'
- *         - $ref: '#/components/schemas/LastActionResponse'
  *
  *     LastActionResponse:
  *       type: object
@@ -92,6 +91,36 @@ const {
  *                    - $ref: '#/components/schemas/LastActionResponse'
  */
 bankAccountRouter.post('/', ValidateCreateBankAccountRequest, Insert);
+
+/**
+ * @openapi
+ * /accounts:
+ *  get:
+ *    summary: Get all Bank Accounts
+ *    tags:
+ *      - Bank Accounts
+ *    responses:
+ *      200:
+ *        description: success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                status:
+ *                  type: integer
+ *                  example: 200
+ *                message:
+ *                  type: string
+ *                  example: success
+ *                error:
+ *                  type: object
+ *                  example: null
+ *                data:
+ *                  type: array
+ *                  items:
+ *                    $ref: '#/components/schemas/BankResponse'
+ */
 bankAccountRouter.get('/', GetAll);
 bankAccountRouter.get('/:id', GetById);
 
