@@ -16,7 +16,11 @@ const options = {
       },
     ],
   },
-  apis: ['./routes/user.route.js', './routes/bankAccount.route.js'],
+  apis: [
+    './routes/user.route.js',
+    './routes/bankAccount.route.js',
+    './routes/transaction.route.js',
+  ],
 };
 
 // Docs in JSON format
