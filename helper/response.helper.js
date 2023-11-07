@@ -1,9 +1,9 @@
 function ResponseTemplate(data, message, error, status) {
   return {
-    data,
+    status,
     message,
     error,
-    status,
+    data,
   };
 }
 
