@@ -13,10 +13,74 @@ const {
 
 /**
  * @openapi
+ * components:
+ *   schemas:
+ *     UserResponse:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           example: Retno
+ *         email:
+ *           type: string
+ *           example: retno@gmail.com
+ *
+ *     UserRequest:
+ *       allOf:
+ *         - $ref: '#/components/schemas/UserResponse'
+ *         - type: object
+ *           properties:
+ *             password:
+ *               type: string
+ *               example: retnopassword
+ *
+ *     Profile:
+ *       type: object
+ *       properties:
+ *         identityType:
+ *           type: string
+ *           example: KTP
+ *         identityNumber:
+ *           type: string
+ *           example: 3265043
+ *         address:
+ *           type: string
+ *           example: JL. Sahaabat 04
+ *
+ *     UserProfileResponse:
+ *       allOf:
+ *         - $ref: '#/components/schemas/UserResponse'
+ *         - type: object
+ *           properties:
+ *             profile:
+ *               $ref: '#/components/schemas/Profile'
+ *
+ *     LastActionResponse:
+ *       type: object
+ *       properties:
+ *         createdAt:
+ *           type: string
+ *           example: 2023-11-06T06:32:31.301Z
+ *         updatedAt:
+ *           type: string
+ *           example: 2023-11-06T06:32:31.301Z
+ */
+
+/**
+ * @openapi
  * /users:
  *  post:
+ *    summary: Create new User and its Profile
  *    tags:
  *      - Users
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            allOf:
+ *              - $ref: '#/components/schemas/UserRequest'
+ *              - $ref: '#/components/schemas/Profile'
  *    responses:
  *      201:
  *        description: created
@@ -35,44 +99,14 @@ const {
  *                  type: object
  *                  example: null
  *                data:
- *                  type: object
- *                  properties:
- *                    id:
- *                      type: integer
- *                      example: 1
- *                    name:
- *                      type: string
- *                      example: Retno
- *                    email:
- *                      type: string
- *                      example: retno@gmail.com
- *                    createdAt:
- *                      type: string
- *                      example: 2023-11-06T06:32:31.301Z
- *                    updatedAt:
- *                      type: string
- *                      example: 2023-11-06T06:32:31.301Z
- *                    profile:
- *                      type: object
+ *                  allOf:
+ *                    - type: object
  *                      properties:
  *                        id:
  *                          type: integer
  *                          example: 1
- *                        identityType:
- *                          type: string
- *                          example: KTP
- *                        identityNumber:
- *                          type: string
- *                          example: 32750411
- *                        address:
- *                          type: string
- *                          example: Jl. Sukaria
- *                        createdAt:
- *                          type: string
- *                          example: 2023-11-06T06:32:31.301Z
- *                        updatedAt:
- *                          type: string
- *                          example: 2023-11-06T06:32:31.301Z
+ *                    - $ref: '#/components/schemas/UserProfileResponse'
+ *                    - $ref: '#/components/schemas/LastActionResponse'
  */
 userRouter.post('/', ValidateCreateUserRequest, Insert);
 
@@ -80,6 +114,7 @@ userRouter.post('/', ValidateCreateUserRequest, Insert);
  * @openapi
  * /users:
  *  get:
+ *    summary: Get all User and its Profile
  *    tags:
  *      - Users
  *    responses:
@@ -102,20 +137,108 @@ userRouter.post('/', ValidateCreateUserRequest, Insert);
  *                data:
  *                  type: array
  *                  items:
- *                    type: object
- *                    properties:
- *                      id:
- *                        type: integer
- *                        example: 1
- *                      name:
- *                        type: string
- *                        example: Retno
- *                      email:
- *                        type: string
- *                        example: retno@gmail.com
+ *                    allOf:
+ *                      - type: object
+ *                        properties:
+ *                          id:
+ *                            type: integer
+ *                            example: 1
+ *                      - $ref: '#/components/schemas/UserResponse'
  */
 userRouter.get('/', GetAll);
+
+/**
+ * @openapi
+ * /users/{id}:
+ *  get:
+ *    summary: Get User and its Profile by User ID
+ *    tags:
+ *      - Users
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *          minimum: 1
+ *    responses:
+ *      200:
+ *        description: success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                status:
+ *                  type: integer
+ *                  example: 200
+ *                message:
+ *                  type: string
+ *                  example: success
+ *                error:
+ *                  type: object
+ *                  example: null
+ *                data:
+ *                  allOf:
+ *                    - type: object
+ *                      properties:
+ *                        id:
+ *                          type: integer
+ *                          example: 1
+ *                    - $ref: '#/components/schemas/UserProfileResponse'
+ *                    - $ref: '#/components/schemas/LastActionResponse'
+ */
 userRouter.get('/:id', GetById);
+
+/**
+ * @openapi
+ * /users/{id}:
+ *  put:
+ *    summary: Update User and its Profile by User ID
+ *    tags:
+ *      - Users
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *          minimum: 1
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            allOf:
+ *              - $ref: '#/components/schemas/UserRequest'
+ *              - $ref: '#/components/schemas/Profile'
+ *    responses:
+ *      200:
+ *        description: success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                status:
+ *                  type: integer
+ *                  example: 200
+ *                message:
+ *                  type: string
+ *                  example: success
+ *                error:
+ *                  type: object
+ *                  example: null
+ *                data:
+ *                  allOf:
+ *                    - type: object
+ *                      properties:
+ *                        id:
+ *                          type: integer
+ *                          example: 1
+ *                    - $ref: '#/components/schemas/UserProfileResponse'
+ *                    - $ref: '#/components/schemas/LastActionResponse'
+ */
 userRouter.put('/:id', ValidateUpdateUserRequest, Update);
 // userRouter.delete('/:id', Delete);
 
