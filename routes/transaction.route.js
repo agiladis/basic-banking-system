@@ -36,15 +36,19 @@ const {
  *           type: integer
  *           example: 1
  *
- *     LastActionResponse:
- *       type: object
- *       properties:
- *         createdAt:
- *           type: string
- *           example: 2023-11-06T06:32:31.301Z
- *         updatedAt:
- *           type: string
- *           example: 2023-11-06T06:32:31.301Z
+ *     TransactionResponse:
+ *       allOf:
+ *         - type: object
+ *           properties:
+ *             id:
+ *               type: integer
+ *               example: 1
+ *         - $ref: '#/components/schemas/TransactionRequest'
+ *         - type: object
+ *           properties:
+ *             createdAt:
+ *               type: string
+ *               example: 2023-11-06T06:32:31.301Z
  */
 
 /**
@@ -79,20 +83,39 @@ const {
  *                  type: object
  *                  example: null
  *                data:
- *                  allOf:
- *                    - type: object
- *                      properties:
- *                        id:
- *                          type: integer
- *                          example: 1
- *                    - $ref: '#/components/schemas/TransactionRequest'
- *                    - type: object
- *                      properties:
- *                        createdAt:
- *                          type: string
- *                          example: 2023-11-06T06:32:31.301Z
+ *                  $ref: '#/components/schemas/TransactionResponse'
  */
 transactionRoute.post('/', ValidateCreateTransactionRequest, Insert);
+
+/**
+ * @openapi
+ * /transactions:
+ *  get:
+ *    summary: Get all Bank Transaction
+ *    tags:
+ *      - Transactions
+ *    responses:
+ *      200:
+ *        description: success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                status:
+ *                  type: integer
+ *                  example: 200
+ *                message:
+ *                  type: string
+ *                  example: success
+ *                error:
+ *                  type: object
+ *                  example: null
+ *                data:
+ *                  type: array
+ *                  items:
+ *                    $ref: '#/components/schemas/TransactionResponse'
+ */
 transactionRoute.get('/', GetAll);
 transactionRoute.get('/:id', GetById);
 
