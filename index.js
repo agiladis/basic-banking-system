@@ -21,3 +21,5 @@ app.listen(PORT, () => {
   console.log(`banking system app listening at http://localhost:${PORT}`);
   V1SwaggerDocs(app, PORT);
 });
+
+module.exports = app
