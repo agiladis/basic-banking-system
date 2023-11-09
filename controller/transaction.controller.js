@@ -16,7 +16,7 @@ async function Insert(req, res) {
             null,
             'you cannot make transaction with yourself',
             null,
-            404
+            400
           )
         );
     }
