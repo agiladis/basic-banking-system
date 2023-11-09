@@ -8,6 +8,30 @@ const mockResponse = () => {
 };
 
 describe('Transactions Endpoint', () => {
+  describe('POST /transactions', () => {
+    test('POSITIVE - should created new interbank transaction and return 201', async () => {
+      const req = mockRequest({
+        amount: 15000,
+        sourceAccountId: 1,
+        destinationAccountId: 2,
+      });
+      const res = mockResponse();
+
+      await base.Insert(req, res);
+
+      expect(res.status).toBeCalledWith(201);
+      expect(res.json).toHaveBeenCalledTimes(1);
+      expect(res.json).toBeCalledWith(
+        expect.objectContaining({
+          status: 201,
+          message: 'transaction success',
+          error: null,
+          data: expect.any(Object),
+        })
+      );
+    });
+  });
+
   describe('GET /transactions', () => {
     test('POSITIVE - should return a list of interbank transaction', async () => {
       const req = mockRequest();
@@ -48,7 +72,7 @@ describe('Transactions Endpoint', () => {
       );
     });
 
-    test('POSITIVE - should return specific user', async () => {
+    test('POSITIVE - should return specific transaction', async () => {
       const req = mockRequest();
       const res = mockResponse();
       req.params = {
