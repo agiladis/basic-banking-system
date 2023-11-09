@@ -27,4 +27,44 @@ describe('Transactions Endpoint', () => {
       );
     });
   });
+
+  describe('GET /transactions/{id}', () => {
+    test('Negative - should return 404 when specific transaction not found', async () => {
+      const req = mockRequest();
+      const res = mockResponse();
+      req.params = {
+        id: '',
+      };
+
+      await base.GetById(req, res);
+      expect(res.status).toBeCalledWith(404);
+      expect(res.json).toBeCalledWith(
+        expect.objectContaining({
+          status: 404,
+          message: 'transaction not found',
+          error: null,
+          data: expect.any(Object),
+        })
+      );
+    });
+
+    test('POSITIVE - should return specific user', async () => {
+      const req = mockRequest();
+      const res = mockResponse();
+      req.params = {
+        id: 1,
+      };
+
+      await base.GetById(req, res);
+      expect(res.status).toBeCalledWith(200);
+      expect(res.json).toBeCalledWith(
+        expect.objectContaining({
+          status: 200,
+          message: 'success',
+          error: null,
+          data: expect.any(Object),
+        })
+      );
+    });
+  });
 });
