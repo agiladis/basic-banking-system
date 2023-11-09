@@ -8,12 +8,37 @@ const mockResponse = () => {
 };
 
 describe('Bank Account Endpoint', () => {
+  describe('POST /accounts', () => {
+    test('POSITIVE - should created bank account and return 201', async () => {
+      const req = mockRequest({
+        userId: 1,
+        bankName: 'Fake Bank',
+        balance: 100000,
+      });
+      const res = mockResponse();
+
+      await base.Insert(req, res);
+
+      expect(res.status).toBeCalledWith(201);
+      expect(res.json).toHaveBeenCalledTimes(1);
+      expect(res.json).toBeCalledWith(
+        expect.objectContaining({
+          status: 201,
+          message: 'success',
+          error: null,
+          data: expect.any(Object),
+        })
+      );
+    });
+  });
+
   describe('GET /accounts', () => {
     test('POSITIVE - should return a list of bank accounts', async () => {
       const req = mockRequest();
       const res = mockResponse();
 
       await base.GetAll(req, res);
+
       expect(res.status).toBeCalledWith(200);
       // expect(res.json).toHaveBeenCalledTimes(1);
       expect(res.json).toBeCalledWith(
