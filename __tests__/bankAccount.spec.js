@@ -53,6 +53,25 @@ describe('Bank Account Endpoint', () => {
   });
 
   describe('GET /accounts/{id}', () => {
+    test('Negative - should return 404 when specific user not found', async () => {
+      const req = mockRequest();
+      const res = mockResponse();
+      req.params = {
+        id: '',
+      };
+
+      await base.GetById(req, res);
+      expect(res.status).toBeCalledWith(404);
+      expect(res.json).toBeCalledWith(
+        expect.objectContaining({
+          status: 404,
+          message: 'bank account not found',
+          error: true,
+          data: expect.any(Object),
+        })
+      );
+    });
+
     test('POSITIVE - should return specific user', async () => {
       const req = mockRequest();
       const res = mockResponse();
